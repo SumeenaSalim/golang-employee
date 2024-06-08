@@ -40,7 +40,6 @@ func GetIndividualEmployee(c *gin.Context, empID string) (objects.EmployeeData, 
 
 func UpdateEmployee(c *gin.Context, params map[string]interface{}) error {
 	var emp objects.EmployeeData
-	fmt.Print("\n\n*********************", params)
 
 	query := `
 		UPDATE Employees::Employees 

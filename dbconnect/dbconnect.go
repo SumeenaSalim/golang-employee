@@ -23,7 +23,7 @@ func ConnectDatabase() {
 		Database:    os.Getenv("EDGEDB_SERVER_DATABASE"),
 		User:        os.Getenv("EDGEDB_SERVER_USER"),
 		Password:    edgedb.NewOptionalStr(os.Getenv("EDGEDB_SERVER_PASSWORD")),
-		Host:        "edgedb",
+		Host:        os.Getenv("EDGEDB_HOST"),
 		TLSSecurity: os.Getenv("EDGEDB_CLIENT_TLS_SECURITY"),
 		Port:        5656,
 	}
