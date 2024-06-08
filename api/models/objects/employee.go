@@ -9,7 +9,7 @@ import (
 
 type Employee struct {
 	ID       edgedb.OptionalUUID `edgedb:"id" json:"id"`
-	Name     string              `edgedb:"name" json:"bookName"`
+	Name     string              `edgedb:"name" json:"name"`
 	Position string              `edgedb:"position" json:"position"`
 	Salary   float64             `edgedb:"salary" json:"salary"`
 }

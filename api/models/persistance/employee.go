@@ -38,23 +38,22 @@ func GetIndividualEmployee(c *gin.Context, empID string) (objects.EmployeeData, 
 	return result, err
 }
 
-func UpdateEmployee(c *gin.Context, params map[string]interface{}) (objects.EmployeeData, error) {
-
+func UpdateEmployee(c *gin.Context, params map[string]interface{}) error {
 	var emp objects.EmployeeData
+	fmt.Print("\n\n*********************", params)
 
 	query := `
-		SELECT (
-			UPDATE Employees::Employees 
-			FILTER .id = <uuid>$employeeID
-			SET {
-				name := <str>$name,
-				position := <str>$position,
-				salary := <float64>$salary
-			}
-		) {id, name, position, salary} LIMIT 1;
+		UPDATE Employees::Employees 
+		FILTER .id = <uuid>$employeeID
+		SET {
+			name := <str>$name,
+			position := <str>$position,
+			salary := <float64>$salary
+		};
 	`
+
 	err := dbconnect.DbClient.QuerySingle(c.Request.Context(), query, &emp, params)
-	return emp, err
+	return err
 }
 
 func DeleteEmployee(c *gin.Context, empID string) error {
