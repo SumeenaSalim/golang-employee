@@ -1,0 +1,26 @@
+version: '3'
+services:
+  app:
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    depends_on:
+      - edgedb
+  edgedb:
+    restart: always
+    image: edgedb/edgedb:latest
+    env_file:
+      - .env
+    volumes:
+      - .dbdata:/var/lib/edgedb/data # Data persistence
+      - "./dbschema:/dbschema"      # Schema persistence    
+    ports:
+      - "5656:5656"
+
+volumes:
+  dbdata:
