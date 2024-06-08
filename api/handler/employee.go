@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/employee/api/constsval"
@@ -31,15 +32,17 @@ func CreateEmployee(c *gin.Context) {
 		response.JSONError(c, http.StatusBadRequest, EmpErr.Error(), response.ErrorDetail{Error: EmpErr.Error()})
 		return
 	}
+	empId, _ := result.ID.Get()
+	message := fmt.Sprintf("%s successfully created", empId)
 
-	response.JSONSuccess(c, http.StatusCreated, result)
+	response.JSONSuccess(c, http.StatusCreated, "", message)
 }
 
 func GetIndividualEmployee(c *gin.Context) {
-	empId := c.Param("empID")
+	empId := c.Param("empId")
 	result, err := models.GetEmployee(c, empId)
 	if err != nil {
-		response.JSONError(c, http.StatusBadRequest, err.Error(), response.ErrorDetail{Error: err.Error()})
+		response.JSONError(c, http.StatusBadRequest, constsval.ID_NOT_FOUND, response.ErrorDetail{Error: constsval.ID_NOT_FOUND})
 		return
 	}
 
@@ -47,7 +50,7 @@ func GetIndividualEmployee(c *gin.Context) {
 }
 
 func UpdateEmployee(c *gin.Context) {
-	empId := c.Param("empID")
+	empId := c.Param("empId")
 	var emp objects.Employee
 	if err := utils.BindAndValidateRequestBody(c, &emp); err != nil {
 		response.JSONError(c, http.StatusBadRequest, constsval.INVALID_REQUEST_BODY, err)
@@ -60,24 +63,26 @@ func UpdateEmployee(c *gin.Context) {
 		return
 	}
 
-	result, EmpErr := models.UpdateEmployee(c, empId, emp)
+	EmpErr := models.UpdateEmployee(c, empId, emp)
 	if err != nil {
 		response.JSONError(c, http.StatusBadRequest, EmpErr.Error(), response.ErrorDetail{Error: EmpErr.Error()})
 		return
 	}
 
-	response.JSONSuccess(c, http.StatusOK, result)
+	message := fmt.Sprintf("%s successfully updated", empId)
+	response.JSONSuccess(c, http.StatusOK, "", message)
 }
 
 func DeleteEmployee(c *gin.Context) {
-	empId := c.Param("empID")
+	empId := c.Param("empId")
 	err := models.DeleteEmployee(c, empId)
 	if err != nil {
 		response.JSONError(c, http.StatusBadRequest, err.Error(), response.ErrorDetail{Error: err.Error()})
 		return
 	}
 
-	response.JSONSuccess(c, http.StatusOK, "deleted successfully")
+	message := fmt.Sprintf("%s successfully deleted", empId)
+	response.JSONSuccess(c, http.StatusOK, "", message)
 }
 
 func GetAllEmployees(c *gin.Context) {

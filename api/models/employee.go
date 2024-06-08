@@ -29,21 +29,21 @@ func GetEmployee(c *gin.Context, empID string) (objects.EmployeeData, error) {
 	return result, nil
 }
 
-func UpdateEmployee(c *gin.Context, empID string, emp objects.Employee) (objects.EmployeeData, error) {
+func UpdateEmployee(c *gin.Context, empID string, emp objects.Employee) error {
 	employeeID, _ := edgedb.ParseUUID(empID)
 	params := map[string]interface{}{
 		"employeeID": employeeID,
-		"name": emp.Name,
-		"position": emp.Position,
-		"salary": emp.Salary,
+		"name":       emp.Name,
+		"position":   edgedb.NewOptionalStr(emp.Position),
+		"salary":     edgedb.NewOptionalFloat64(emp.Salary),
 	}
 
-	result, err := persistance.UpdateEmployee(c, params)
+	err := persistance.UpdateEmployee(c, params)
 	if err != nil {
-		return objects.EmployeeData{}, err
+		return err
 	}
 
-	return result, nil
+	return nil
 }
 
 func DeleteEmployee(c *gin.Context, empID string) error {
